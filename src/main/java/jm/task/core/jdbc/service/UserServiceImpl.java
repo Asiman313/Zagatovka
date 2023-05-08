@@ -5,11 +5,13 @@ import jm.task.core.jdbc.dao.UserDaoHibernateImpl;
 import jm.task.core.jdbc.dao.UserDaoJDBCImpl;
 import jm.task.core.jdbc.model.User;
 
+import javax.persistence.Entity;
 import java.util.List;
+
 
 public class UserServiceImpl implements UserService {
 
-    UserDao userService = new UserDaoJDBCImpl();
+    UserDao userService = new UserDaoHibernateImpl();
     public void createUsersTable() {
         userService.createUsersTable();
 
