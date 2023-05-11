@@ -13,7 +13,7 @@ public class User {
     @Column(name = "name")
     private String name;
 
-    @Column(name = "lastName")
+    @Column(name = "last_name")
     private String lastName;
 
     @Column(name = "age")
@@ -63,6 +63,6 @@ public class User {
 
     @Override
     public String toString() {
-        return "Пользователя зовут " + name + " " + lastName + " ему " + age + " лет";
+        return "Polzovatelya zovut " + name + " " + lastName + " emu " + age + " let";
     }
 }
