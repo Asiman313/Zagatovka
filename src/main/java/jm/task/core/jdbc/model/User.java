@@ -4,18 +4,13 @@ import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-@Table
 public class User {
-    @Id
-    private static Long id;
+    private Long id;
 
-    @Column
     private String name;
 
-    @Column
     private String lastName;
 
-    @Column
     private Byte age;
 
     public User() {
@@ -28,7 +23,7 @@ public class User {
         this.age = age;
     }
 
-    public static Long getId() {
+    public Long getId() {
         return id;
     }
 
@@ -62,6 +57,6 @@ public class User {
 
     @Override
     public String toString() {
-        return "Пользователя зовут " + name + " " + lastName + " ему " + age + " лет";
+        return "Polzovatelya zovut " + name + " " + lastName + " emu " + age + " let";
     }
 }
