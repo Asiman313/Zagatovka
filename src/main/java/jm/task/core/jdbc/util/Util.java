@@ -12,13 +12,6 @@ public class Util {
     private static final String PASSWORD = "Asiman111!";
     private static Util util;
 
-    public static Util getUtil() {
-        if (util == null) {
-            util = new Util();
-        }
-        return util;
-    }
-
     public static Connection getConnection() {
         try {
             if ((connection == null) || (connection.isClosed())) {
