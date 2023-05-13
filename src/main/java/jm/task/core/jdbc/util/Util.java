@@ -1,15 +1,11 @@
 package jm.task.core.jdbc.util;
 
-
 import jm.task.core.jdbc.model.User;
-import org.hibernate.HibernateException;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.cfg.Environment;
 import org.hibernate.service.ServiceRegistry;
-
-import javax.sound.midi.Soundbank;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.DriverManager;
@@ -18,11 +14,11 @@ import java.util.Properties;
 
 public class Util {
 
-    private static String userName = "root";
-    private static String password = "Asiman111!";
-    private static String conUrl = "jdbc:mysql://localhost:3306/sys";
-    private static String driver = "com.mysql.cj.jdbc.Driver";
-    private static Connection connection = null;
+    private final static String userName = "root";
+    private final static String password = "Asiman111!";
+    private final static String conUrl = "jdbc:mysql://localhost:3306/User";
+    private final static String driver = "com.mysql.cj.jdbc.Driver";
+    private  static Connection connection = null;
     private static SessionFactory sessionFactory = null;
 
     public static Connection getConnection() {
@@ -49,7 +45,7 @@ public class Util {
                 settings.put(Environment.DIALECT, "org.hibernate.dialect.MySQL8Dialect");
                 settings.put(Environment.SHOW_SQL, true);
                 settings.put(Environment.CURRENT_SESSION_CONTEXT_CLASS, "thread");
-                settings.put(Environment.HBM2DDL_AUTO, "update");
+                settings.put(Environment.HBM2DDL_AUTO, "create-drop");
 
                 configuration.setProperties(settings);
 

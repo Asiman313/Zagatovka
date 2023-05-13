@@ -6,96 +6,111 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import javax.persistence.Query;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
-import java.util.ArrayList;
 import java.util.List;
 
 
 
 public class UserDaoHibernateImpl implements UserDao {
-    SessionFactory sessionFactory = Util.getSessionFactory();
+    public SessionFactory sessionFactory = Util.getSessionFactory();
     public UserDaoHibernateImpl() {
 
     }
 
     @Override
     public void createUsersTable() {
-
-        Session session = sessionFactory.openSession();
-        Transaction transaction = session.beginTransaction();
-        String sql = "CREATE TABLE IF NOT EXISTS users (id BIGINT PRIMARY KEY NOT NULL AUTO_INCREMENT," +
-                " name VARCHAR(200), lastName VARCHAR(200), age INTEGER)";
-        session.createSQLQuery(sql).executeUpdate();
-        transaction.commit();
-        session.close();
+        String query = "CREATE TABLE IF NOT EXISTS users (id BIGINT PRIMARY KEY NOT NULL AUTO_INCREMENT," +
+                " name VARCHAR(200), last_name VARCHAR(200), age TINYINT)";
+        Transaction transaction = null;
+        try (Session session = sessionFactory.openSession()) {
+            transaction = session.beginTransaction();
+            session.createSQLQuery(query).executeUpdate();
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void dropUsersTable() {
-
-        Session session = sessionFactory.openSession();
-        Transaction transaction = session.beginTransaction();
-        session.createSQLQuery("DROP TABLE IF EXISTS users").executeUpdate();
-        transaction.commit();
-        session.close();
+        Transaction transaction = null;
+        try (Session session = sessionFactory.openSession()) {
+            transaction = session.beginTransaction();
+            session.createSQLQuery("DROP TABLE IF EXISTS users").executeUpdate();
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void saveUser(String name, String lastName, byte age) {
-
-        Session session = sessionFactory.openSession();
-        Transaction transaction = session.beginTransaction();
-        User userNew = new User(name, lastName, age);
-        session.save(userNew);
-        transaction.commit();
-        session.close();
-
+        Transaction transaction = null;
+        try (Session session = sessionFactory.openSession()) {
+            transaction = session.beginTransaction();
+            User userNew = new User(name, lastName, age);
+            session.save(userNew);
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void removeUserById(long id) {
-
-        Session session = sessionFactory.openSession();
-        Transaction transaction = session.beginTransaction();
-        User userDel = session.load(User.class, id);
-        session.delete(userDel);
-        transaction.commit();
-        session.close();
-
+        Transaction transaction = null;
+        try (Session session = sessionFactory.openSession()) {
+            transaction = session.beginTransaction();
+            session.createQuery("DELETE User where id = :id").setParameter("id", id).executeUpdate();
+            session.delete(session.get(User.class, id));
+            session.getTransaction().commit();
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        }
     }
 
     @Override
     public List<User> getAllUsers() {
-
-        Session session = sessionFactory.openSession();
-        Transaction transaction = session.beginTransaction();
-
-        List<User> users = new ArrayList<>();
-        CriteriaBuilder builder = session.getCriteriaBuilder();
-        CriteriaQuery<User> query = builder.createQuery(User.class);
-        Root<User> root = query.from(User.class);
-        query.select(root);
-        List<User> resultList = session.createQuery(query).getResultList();
-        users.addAll(resultList);
-        transaction.commit();
-        session.close();
-
+        List<User> users = null;
+        Transaction transaction = null;
+        try (Session session = sessionFactory.openSession()) {
+            transaction = session.beginTransaction();
+            users = session.createQuery("FROM User", User.class).getResultList();
+            session.getTransaction().commit();
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        }
         return users;
     }
 
     @Override
     public void cleanUsersTable() {
-        Session session = sessionFactory.openSession();
-        Transaction transaction = session.beginTransaction();
-
-        String clean = "DELETE FROM User";
-        Query query = session.createQuery(clean);
-        query.executeUpdate();
-
-        transaction.commit();
-        session.close();
-
+        Transaction transaction = null;
+        try (Session session = sessionFactory.openSession()) {
+            transaction = session.beginTransaction();
+            String clean = "DELETE FROM User";
+            Query query = session.createQuery(clean);
+            query.executeUpdate();
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        }
     }
 }
