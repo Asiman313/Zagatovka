@@ -6,6 +6,7 @@ import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.cfg.Environment;
 import org.hibernate.service.ServiceRegistry;
+
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.DriverManager;
@@ -14,17 +15,17 @@ import java.util.Properties;
 
 public class Util {
 
-    private final static String userName = "root";
-    private final static String password = "Asiman111!";
-    private final static String conUrl = "jdbc:mysql://localhost:3306/User";
-    private final static String driver = "com.mysql.cj.jdbc.Driver";
-    private  static Connection connection = null;
+    private final static String USERNAME = "root";
+    private final static String PASSWORD = "Asiman111!";
+    private final static String URL = "jdbc:mysql://localhost:3306/User";
+    private final static String DRIVER = "com.mysql.cj.jdbc.Driver";
+    private static Connection connection = null;
     private static SessionFactory sessionFactory = null;
 
     public static Connection getConnection() {
         try {
             if (connection == null || connection.isClosed()) {
-                connection = DriverManager.getConnection(conUrl, userName, password);
+                connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -38,10 +39,10 @@ public class Util {
                 Configuration configuration = new Configuration();
                 Properties settings = new Properties();
 
-                settings.put(Environment.DRIVER, driver);
-                settings.put(Environment.URL, conUrl);
-                settings.put(Environment.PASS, password);
-                settings.put(Environment.USER, userName);
+                settings.put(Environment.DRIVER, DRIVER);
+                settings.put(Environment.URL, URL);
+                settings.put(Environment.PASS, PASSWORD);
+                settings.put(Environment.USER, USERNAME);
                 settings.put(Environment.DIALECT, "org.hibernate.dialect.MySQL8Dialect");
                 settings.put(Environment.SHOW_SQL, true);
                 settings.put(Environment.CURRENT_SESSION_CONTEXT_CLASS, "thread");
@@ -54,8 +55,11 @@ public class Util {
 
                 sessionFactory = configuration.addAnnotatedClass(User.class).buildSessionFactory(serviceRegistry);
             }
+            System.out.println("CONNECT");
         } catch (Exception e) {
+            System.out.println("NOT CONNECT");
             e.printStackTrace();
+
         }
         return sessionFactory;
     }
